@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "768101665963",
+    "firebase_url": "https://dataviv-ecommerce.firebaseio.com",
+    "project_id": "dataviv-ecommerce",
+    "storage_bucket": "dataviv-ecommerce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768101665963:android:59d55f4350a01afea1fbee",
+        "android_client_info": {
+          "package_name": "com.sumit.dataviv.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768101665963-bq80vrld164jn9pk85ri3rjo4ts1cb60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCexKPsdcSDjgdpdJptadq7TTv1_Z8OUrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768101665963-bq80vrld164jn9pk85ri3rjo4ts1cb60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
