@@ -21,6 +21,7 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin {
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
+  bool _sidenavVisible = false;
 
   @override
   void initState() {
@@ -171,151 +172,193 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin {
         scale: _scaleAnimation,
         child: Material(
           animationDuration: duration,
-          borderRadius: BorderRadius.all(Radius.circular(40)),
           elevation: 8,
-          color: backgroundColor,
+          // color: backgroundColor,
           child: Row(
             children: [
               Expanded(
                 child: _list[_selectedIndex],
               ),
               Container(
-                width: MediaQuery.of(context).size.width / 6,
-                color: ThemeColors.blueColor,
-                child: Column(
+                color: Colors.transparent,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 48),
-
-                    //Profile
+                    //Toggle Button
                     GestureDetector(
-                      onTap: () => _onItemTapped(2),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 28,
-                            backgroundImage: NetworkImage(
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ3W2b0jcCQUk6d4vQsnRfped9P8tM51dhYuQ&usqp=CAU")),
-                      ),
-                    ),
-
-                    //Home
-                    GestureDetector(
-                      onTap: () => _onItemTapped(0),
-                      child: Container(
-                        color: _selectedIndex == 0
-                            ? ThemeColors.yellowColor
-                            : null,
-                        width: MediaQuery.of(context).size.width / 6,
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.home_outlined,
-                              size: 30,
-                              color: _selectedIndex == 0
-                                  ? ThemeColors.blueColor
-                                  : Colors.white,
-                            ),
-                            Text(
-                              'Home',
-                              style: TextStyle(
-                                color: _selectedIndex == 0
-                                    ? ThemeColors.blueColor
-                                    : Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    //Cart
-                    GestureDetector(
-                      onTap: () => _onItemTapped(1),
-                      child: Container(
-                        color: _selectedIndex == 1
-                            ? ThemeColors.yellowColor
-                            : null,
-                        width: MediaQuery.of(context).size.width / 6,
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 30,
-                              color: _selectedIndex == 1
-                                  ? ThemeColors.blueColor
-                                  : Colors.white,
-                            ),
-                            Text(
-                              'Cart',
-                              style: TextStyle(
-                                color: _selectedIndex == 1
-                                    ? ThemeColors.blueColor
-                                    : Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    //Delviery
-                    GestureDetector(
-                      // onTap: ()=> _onItemTapped(3),
-                      child: Container(
-                        color: _selectedIndex == 3
-                            ? ThemeColors.yellowColor
-                            : null,
-                        width: MediaQuery.of(context).size.width / 6,
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.delivery_dining,
-                              size: 30,
-                              color: _selectedIndex == 3
-                                  ? ThemeColors.blueColor
-                                  : Colors.white,
-                            ),
-                            Text(
-                              'Delivery',
-                              style: TextStyle(
-                                color: _selectedIndex == 3
-                                    ? ThemeColors.blueColor
-                                    : Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    //Bottom Logo
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Stack(
-                          alignment: AlignmentDirectional.bottomCenter,
-                          children: [
-                            Container(
-                              color: ThemeColors.yellowColor,
-                              height: 110,
-                            ),
-                            //Image of Sardar
-                            Image(
-                              image: AssetImage('images/s37.png'),
-                              fit: BoxFit.cover,
-                              height: 180,
+                      onTap: () {
+                        setState(() {
+                          _sidenavVisible = !_sidenavVisible;
+                        });
+                      },
+                      child: _sidenavVisible
+                          ? Icon(
+                              Icons.arrow_forward_ios,
+                              size: 20,
+                              color: Color.fromRGBO(0, 0, 0, 0.5),
                             )
-                          ],
+                          : Icon(
+                              Icons.arrow_back_ios,
+                              size: 20,
+                            ),
+                    ),
+
+                    //Side Navigation
+                    Container(
+                      color: ThemeColors.blueColor,
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        width: _sidenavVisible
+                            ? MediaQuery.of(context).size.width / 6
+                            : 0,
+                        child: Visibility(
+                          visible: _sidenavVisible,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 48),
+
+                              //Profile
+                              GestureDetector(
+                                onTap: () => _onItemTapped(2),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 28,
+                                      backgroundImage: NetworkImage(
+                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ3W2b0jcCQUk6d4vQsnRfped9P8tM51dhYuQ&usqp=CAU")),
+                                ),
+                              ),
+
+                              //Home
+                              GestureDetector(
+                                onTap: () => _onItemTapped(0),
+                                child: Container(
+                                  color: _selectedIndex == 0
+                                      ? ThemeColors.yellowColor
+                                      : null,
+                                  width: MediaQuery.of(context).size.width / 6,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.home_outlined,
+                                        size: 30,
+                                        color: _selectedIndex == 0
+                                            ? ThemeColors.blueColor
+                                            : Colors.white,
+                                      ),
+                                      Text(
+                                        'Home',
+                                        style: TextStyle(
+                                          color: _selectedIndex == 0
+                                              ? ThemeColors.blueColor
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              //Cart
+                              GestureDetector(
+                                onTap: () => _onItemTapped(1),
+                                child: Container(
+                                  color: _selectedIndex == 1
+                                      ? ThemeColors.yellowColor
+                                      : null,
+                                  width: MediaQuery.of(context).size.width / 6,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.shopping_cart_outlined,
+                                        size: 30,
+                                        color: _selectedIndex == 1
+                                            ? ThemeColors.blueColor
+                                            : Colors.white,
+                                      ),
+                                      Text(
+                                        'Cart',
+                                        style: TextStyle(
+                                          color: _selectedIndex == 1
+                                              ? ThemeColors.blueColor
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              //Delviery
+                              GestureDetector(
+                                // onTap: ()=> _onItemTapped(3),
+                                child: Container(
+                                  color: _selectedIndex == 3
+                                      ? ThemeColors.yellowColor
+                                      : null,
+                                  width: MediaQuery.of(context).size.width / 6,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.delivery_dining,
+                                        size: 30,
+                                        color: _selectedIndex == 3
+                                            ? ThemeColors.blueColor
+                                            : Colors.white,
+                                      ),
+                                      Text(
+                                        'Delivery',
+                                        style: TextStyle(
+                                          color: _selectedIndex == 3
+                                              ? ThemeColors.blueColor
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              //Bottom Logo
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Stack(
+                                    alignment:
+                                        AlignmentDirectional.bottomCenter,
+                                    children: [
+                                      Container(
+                                        color: ThemeColors.yellowColor,
+                                        height: 110,
+                                      ),
+                                      //Image of Sardar
+                                      Image(
+                                        image: AssetImage('images/s37.png'),
+                                        fit: BoxFit.cover,
+                                        height: 180,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

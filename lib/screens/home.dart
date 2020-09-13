@@ -215,7 +215,7 @@ class _HomeState extends State<Home> {
             )
           : SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                margin: EdgeInsets.only(left: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
