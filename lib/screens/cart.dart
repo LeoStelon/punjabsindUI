@@ -110,7 +110,6 @@ class _CartState extends State<Cart> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCartDetails();
   }
@@ -121,14 +120,24 @@ class _CartState extends State<Cart> {
       key: _cartScaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text(
-          "My Order",
-          style: TextStyle(
-            color: ThemeColors.blueColor,
-            fontSize: 2.7 * SizeConfig.textMultiplier,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back_ios_outlined),
+                onPressed: () => Navigator.popAndPushNamed(context, '/tabs'),
+              ),
+              Text(
+                "My Order",
+                style: TextStyle(
+                  color: ThemeColors.blueColor,
+                  fontSize: 2.7 * SizeConfig.textMultiplier,
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:ecommerce/constant/colors.dart';
-import 'package:ecommerce/constant/strings.dart';
 import 'package:ecommerce/providers/global.dart';
 import 'package:ecommerce/screens/addresses.dart';
 import 'package:ecommerce/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:content_placeholder/content_placeholder.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:share/share.dart';
 
 class Profile extends StatefulWidget {
@@ -62,7 +60,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initialize();
   }
@@ -73,6 +70,7 @@ class _ProfileState extends State<Profile> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         title: Text(

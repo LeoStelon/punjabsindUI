@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:ecommerce/constant/colors.dart';
 import 'package:ecommerce/constant/images.dart';
-import 'package:ecommerce/providers/global.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Intro extends StatefulWidget {
   @override
@@ -14,7 +10,6 @@ class Intro extends StatefulWidget {
 class _IntroState extends State<Intro> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //isLoggedIn();
   }

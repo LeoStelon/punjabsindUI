@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:basic_utils/basic_utils.dart';
 import 'package:ecommerce/constant/colors.dart';
 import 'package:ecommerce/providers/global.dart';
 import 'package:ecommerce/providers/ordersProvider.dart';
 import 'package:ecommerce/screens/orderdetails.dart';
-import 'package:ecommerce/screens/trackorder.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

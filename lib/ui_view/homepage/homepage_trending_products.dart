@@ -124,11 +124,13 @@ class _HomePageTrendingProductsState extends State<HomePageTrendingProducts> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                child: Text(
-                  "Trending this Week",
-                  style: TextStyle(
-                    fontSize: 2.4 * SizeConfig.textMultiplier,
-                    fontWeight: FontWeight.w500,
+                child: Flexible(
+                  child: Text(
+                    "Trending this Week",
+                    style: TextStyle(
+                      fontSize: 2.4 * SizeConfig.textMultiplier,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -190,26 +192,26 @@ class _HomePageTrendingProductsState extends State<HomePageTrendingProducts> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          top: 3.0, bottom: 1.0),
-                                      child: productData["discount"] != 0.0 &&
-                                              productData["discount"] != null
-                                          ? Text(
-                                              "₹" +
-                                                  processProductEFFPrice(
-                                                          productData[
-                                                              "product_price"],
-                                                          productData[
-                                                              "discount"])
-                                                      .toString(),
-                                              style: TextStyle(
-                                                fontSize: 2.2 *
-                                                    SizeConfig.textMultiplier,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            )
-                                          : Container(),
+                                    Flexible(
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            top: 3.0, bottom: 1.0),
+                                        child: productData["discount"] != 0.0 &&
+                                                productData["discount"] != null
+                                            ? Text(
+                                                "₹" +
+                                                    processProductEFFPrice(
+                                                            productData[
+                                                                "product_price"],
+                                                            productData[
+                                                                "discount"])
+                                                        .toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              )
+                                            : Container(),
+                                      ),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(

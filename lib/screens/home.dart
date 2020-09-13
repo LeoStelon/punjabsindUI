@@ -1,26 +1,38 @@
 import 'dart:convert';
+
 import 'package:ecommerce/constant/colors.dart';
 import 'package:ecommerce/constant/images.dart';
 import 'package:ecommerce/providers/global.dart';
 import 'package:ecommerce/providers/homepageProvider.dart';
 import 'package:ecommerce/providers/subscriptionProvider.dart';
+import 'package:ecommerce/screens/allproducts.dart';
+import 'package:ecommerce/screens/cart.dart';
 import 'package:ecommerce/screens/wallet.dart';
 import 'package:ecommerce/size_config.dart';
+import 'package:ecommerce/ui_view/homepage/drawertile.dart';
 import 'package:ecommerce/ui_view/homepage/homepage_categories.dart';
 import 'package:ecommerce/ui_view/homepage/homepage_featured_sliders.dart';
 import 'package:ecommerce/ui_view/homepage/homepage_trending_products.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:custom_horizontal_calendar/custom_horizontal_calendar.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:ecommerce/screens/allproducts.dart';
+
+final Color backgroundColor = const Color.fromRGBO(255, 202, 0, 1);
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  bool isCollapsed = true;
+  double screenWidth, screenHeight;
+  final Duration duration = const Duration(milliseconds: 300);
+  AnimationController _controller;
+  Animation<double> _scaleAnimation;
+  Animation<double> _menuScaleAnimation;
+  Animation<Offset> _slideAnimation;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List trendingProductsList = [];
   List sliders = [];
@@ -125,265 +137,298 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _controller = AnimationController(vsync: this, duration: duration);
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
+    _menuScaleAnimation =
+        Tween<double>(begin: 0.5, end: 1).animate(_controller);
+    _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
+        .animate(_controller);
     initialize();
     homePageContent();
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<Widget> gridWidget = [
-      Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              "images/track.png",
-              width: 60,
-              height: 60,
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            FittedBox(
-              child: Text(
-                "Track Order",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 3.2 * SizeConfig.textMultiplier,
-                    fontWeight: FontWeight.w600),
-              ),
-            )
-          ],
-        ),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(255, 255, 255, 1),
-          border: Border.all(
-            color: Color.fromRGBO(235, 235, 235, 1),
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    ];
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
 
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(
-                Icons.person,
-                color: ThemeColors.blueColor,
-                size: 45,
-              ),
-              trailing: Icon(Icons.arrow_forward_ios),
-              title: Text(fullName),
-              subtitle: Text(
-                "+91" + emailAddress,
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            Divider(
-              indent: 20,
-              endIndent: 20,
-              color: Colors.grey[600],
-            ),
-            ListTile(
-              leading: Icon(Icons.subscriptions),
-              title: Text("My Subscription"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/subscription");
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.account_balance_wallet),
-              title: Text("Wallet"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Wallet()));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.access_time),
-              title: Text("Order History"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, "/orders");
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.help),
-              title: Text("Support & FAQ"),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text("Logout"),
-              onTap: () {
-                logoutCustomer();
-              },
-            ),
-          ],
-        ),
+      backgroundColor: backgroundColor,
+      body: Stack(
+        children: <Widget>[
+          menu(context),
+          dashboard(context),
+        ],
       ),
-      appBar: AppBar(
-        leading: Container(),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        bottom: PreferredSize(
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  left: 10.0,
-                  top: 17.0,
-                  child: SizedBox(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        size: 32.0,
-                      ),
-                      onPressed: () {
-                        _scaffoldKey.currentState.openDrawer();
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  //alignment: Alignment.topCenter,
-                  child: SizedBox(
-                    width: 80.0,
-                    height: 80.0,
-                    child: Image.asset(Images.screensBgWatermarkLogo),
-                  ),
-                ),
-                Positioned(
-                  top: 20.0,
-                  right: 10.0,
-                  child: Container(
-                    //margin: EdgeInsets.only(top: 8.0, right: 15.0, bottom: 8.0),
-                    child: FlatButton(
-                      onPressed: () {},
-                      child: Text("+ Add Money"),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0)),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
-                      color: ThemeColors.blueColor,
-                      textColor: Colors.grey[100],
-                    ),
-                  ),
-                )
-              ],
-            ),
-            preferredSize: Size.fromHeight(30)),
-      ),
-      body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 5,
-              ),
-            )
-          : SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text('ok'),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        "Nothing is schedule for tomorrow",
-                        style: TextStyle(
-                          fontSize: 2.4 * SizeConfig.textMultiplier,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin:
-                          EdgeInsets.only(left: 10.0, top: 10.0, bottom: 20.0),
-                      child: Column(
-                        children: <Widget>[
-                          MaterialButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AllProducts()));
-                            },
-                            color: Color.fromRGBO(235, 235, 235, 1),
-                            textColor: Colors.black,
-                            child: Icon(
-                              Icons.add,
-                              size: 24,
-                            ),
-                            padding: EdgeInsets.all(16),
-                            shape: CircleBorder(),
-                          ),
-                          SizedBox(
-                            height: 8.0,
-                          ),
-                          Text(
-                            "ADD ITEMS",
-                            style: TextStyle(
-                              color: Colors.cyan,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    HomePageFeaturedSliders(sliders),
-                    HomePageTrendingProducts(
-                        trendingProductsList, _scaffoldKey),
-                    HomePageCategories(categories),
-                    SizedBox(
-                      height: 20,
-                    )
-                  ],
-                ),
-              ),
-            ),
     );
   }
-}
 
-class ProductSearch extends SearchDelegate {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return null;
+  Widget menu(context) {
+    return SlideTransition(
+      position: _slideAnimation,
+      child: ScaleTransition(
+        scale: _menuScaleAnimation,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SafeArea(
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (isCollapsed)
+                              _controller.forward();
+                            else
+                              _controller.reverse();
+
+                            isCollapsed = !isCollapsed;
+                          });
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        DrawerTileComponent(
+                          icon: Icon(
+                            Icons.person_outline_rounded,
+                          ),
+                          title: fullName,
+                          subTitle: "+91" + emailAddress,
+                          trailing: Text('ok'),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/profile'),
+                        )
+                      ],
+                    ),
+                    Divider(
+                      indent: 20,
+                      endIndent: 20,
+                      color: Colors.grey[600],
+                    ),
+                    DrawerTileComponent(
+                      icon: Icon(Icons.subscriptions_outlined),
+                      title: "My Subscription",
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, "/subscription");
+                      },
+                    ),
+                    DrawerTileComponent(
+                      icon: Icon(Icons.account_balance_wallet_outlined),
+                      title: "Wallet",
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Wallet()));
+                      },
+                    ),
+                    DrawerTileComponent(
+                      icon: Icon(Icons.shopping_cart_outlined),
+                      title: "Cart",
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, "/cart");
+                      },
+                    ),
+                    DrawerTileComponent(
+                      icon: Icon(Icons.access_time_outlined),
+                      title: "Order History",
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, "/orders");
+                      },
+                    ),
+                    DrawerTileComponent(
+                      icon: Icon(Icons.help_outline),
+                      title: "Support & FAQ",
+                      onTap: () {},
+                    ),
+                    DrawerTileComponent(
+                      icon: Icon(Icons.power_settings_new_outlined),
+                      title: "Logout",
+                      onTap: () {
+                        // logoutCustomer();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  @override
-  Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-    return null;
-  }
+  Widget dashboard(context) {
+    return AnimatedPositioned(
+      duration: duration,
+      top: 0,
+      bottom: 0,
+      left: isCollapsed ? 0 : 0.6 * screenWidth,
+      right: isCollapsed ? 0 : -0.2 * screenWidth,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Material(
+          animationDuration: duration,
+          borderRadius: BorderRadius.all(Radius.circular(isCollapsed ? 0 : 40)),
+          elevation: 8,
+          color: Colors.white,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: ClampingScrollPhysics(),
+            child: Container(
+              padding: const EdgeInsets.only(left: 8, right: 8, top: 48),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      InkWell(
+                        child: Icon(Icons.menu),
+                        onTap: () {
+                          setState(() {
+                            if (isCollapsed)
+                              _controller.forward();
+                            else
+                              _controller.reverse();
 
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return null;
-  }
+                            isCollapsed = !isCollapsed;
+                          });
+                        },
+                      ),
+                      //Logo
+                      Align(
+                        //alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          width: 80.0,
+                          height: 80.0,
+                          child: Image.asset(Images.screensBgWatermarkLogo),
+                        ),
+                      ),
 
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return null;
+                      //Add Money
+                      Container(
+                        //margin: EdgeInsets.only(top: 8.0, right: 15.0, bottom: 8.0),
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: Text("+ Add Money"),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 8.0),
+                          color: ThemeColors.blueColor,
+                          textColor: Colors.grey[100],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 50),
+
+                  //Body
+                  isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 5,
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                                  child: Text('ok'),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10.0),
+                                  child: Text(
+                                    "Nothing is schedule for tomorrow",
+                                    style: TextStyle(
+                                      fontSize: 2.4 * SizeConfig.textMultiplier,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: 10.0, top: 10.0, bottom: 20.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      MaterialButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AllProducts()));
+                                        },
+                                        color: Color.fromRGBO(235, 235, 235, 1),
+                                        textColor: Colors.black,
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 24,
+                                        ),
+                                        padding: EdgeInsets.all(16),
+                                        shape: CircleBorder(),
+                                      ),
+                                      SizedBox(
+                                        height: 8.0,
+                                      ),
+                                      Text(
+                                        "ADD ITEMS",
+                                        style: TextStyle(
+                                          color: Colors.cyan,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                HomePageFeaturedSliders(sliders),
+                                HomePageTrendingProducts(
+                                    trendingProductsList, _scaffoldKey),
+                                HomePageCategories(categories),
+                                SizedBox(
+                                  height: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -26,42 +26,8 @@ class _TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            title: Text(
-              "SHOPS",
-              style: TextStyle(),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.shopping_cart,
-            ),
-            title: Text(
-              "CART",
-              style: TextStyle(),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-            ),
-            title: Text(
-              "PROFILE",
-              style: TextStyle(),
-            ),
-          ),
-        ],
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
-        selectedItemColor: ThemeColors.blueColor,
-      ),
-      body: _list[_selectedIndex],
+    return Material(
+      child: Home(),
     );
   }
 }
