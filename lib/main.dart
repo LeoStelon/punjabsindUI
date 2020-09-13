@@ -21,23 +21,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-//    SystemChrome.setPreferredOrientations([
-//      DeviceOrientation.portraitUp,
-//    ]);
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return OrientationBuilder(
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
-              //locale: DevicePreview.of(context).locale, // <--- Add the locale
-              //builder: DevicePreview.appBuilder, // <--- Add the builder
               debugShowCheckedModeBanner: false,
-              //theme: AppTheme.lightTheme,
               home: Splash(),
               routes: {
                 "/tabs": (context) => Tabs(),

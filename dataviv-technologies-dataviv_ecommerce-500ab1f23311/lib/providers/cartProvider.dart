@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:ecommerce/providers/Inspector.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 
 class cartProvider {
   Future applyPromoCode(

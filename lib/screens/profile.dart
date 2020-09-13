@@ -119,7 +119,6 @@ class _ProfileState extends State<Profile> {
                                       )
                                     : Container(
                                         width: 0.45 * SizeConfig.screenWidth,
-                                        //color: Colors.orange,
                                         child: Text(
                                           fullName,
                                           style: TextStyle(
@@ -161,7 +160,6 @@ class _ProfileState extends State<Profile> {
                         Container(
                           margin: EdgeInsets.only(left: 10.0, right: 10.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
                                 width: 0.50 * SizeConfig.screenWidth,
@@ -169,7 +167,7 @@ class _ProfileState extends State<Profile> {
                                 child: Text(
                                   "Account Credits / Wallet",
                                   style: TextStyle(
-                                    fontSize: 2.5 * SizeConfig.textMultiplier,
+                                    fontSize: 2 * SizeConfig.textMultiplier,
                                     fontWeight: FontWeight.w600,
                                   ),
                                   maxLines: 2,
@@ -182,7 +180,7 @@ class _ProfileState extends State<Profile> {
                                       height: 15,
                                     )
                                   : Container(
-                                      width: 0.25 * SizeConfig.screenWidth,
+                                      width: 0.15 * SizeConfig.screenWidth,
                                       //color: Colors.red,
                                       alignment: Alignment.center,
                                       child: Text(

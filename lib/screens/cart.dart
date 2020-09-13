@@ -211,31 +211,6 @@ class _CartState extends State<Cart> {
                                       ],
                                     ),
                                   ),
-//                                  Container(
-//                                    margin: EdgeInsets.only(
-//                                        left: 10.0, right: 10.0, bottom: 5.0),
-//                                    child: Row(
-//                                      mainAxisAlignment:
-//                                          MainAxisAlignment.spaceBetween,
-//                                      children: <Widget>[
-//                                        Text(
-//                                          "Tax and Fess",
-//                                          style: TextStyle(
-//                                            fontSize: 18.0,
-//                                            fontWeight: FontWeight.w500,
-//                                          ),
-//                                        ),
-//                                        Text(
-//                                          "+ Rs. " + taxAndFess.toString(),
-//                                          style: TextStyle(
-//                                            fontSize: 18.0,
-//                                            fontWeight: FontWeight.w500,
-//                                            color: Colors.grey,
-//                                          ),
-//                                        )
-//                                      ],
-//                                    ),
-//                                  ),
                                   Container(
                                     margin: EdgeInsets.only(
                                         left: 10.0, right: 10.0),
@@ -380,21 +355,13 @@ class _CartState extends State<Cart> {
                                                       ),
                                                     ),
                                                     Container(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.55,
-                                                      //color: Colors.deepOrange,
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: <Widget>[
                                                           Container(
-                                                            //margin: EdgeInsets.only(right: 5.0),
                                                             height: 37.0,
-                                                            //width: 110.0,
                                                             decoration:
                                                                 BoxDecoration(
                                                               border: Border.all(
@@ -443,9 +410,6 @@ class _CartState extends State<Cart> {
                                                             ),
                                                           ),
                                                           Container(
-                                                            //color: Colors.blue,
-                                                            //alignment: Alignment
-                                                            //s   .center,
                                                             child: Text(
                                                               "Rs. " +
                                                                   product["total_product_pricing"]
